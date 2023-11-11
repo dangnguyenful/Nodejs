@@ -1,0 +1,21 @@
+{
+  "name": "shop",
+  "version": "1.0.0",
+  "description": "Nodejs using mongodb",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=production node server",
+    "dev": "nodemon server"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^8.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

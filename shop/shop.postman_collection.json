@@ -1,0 +1,110 @@
+{
+  "info": {
+    "_postman_id": "77a8f57b-d6ff-45c2-b194-c591b7e4af90",
+    "name": "shop",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3608945"
+  },
+  "item": [
+    {
+      "name": "product",
+      "item": [
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"product 2\",\r\n    \"category\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/api/v1/products",
+              "host": ["{{host}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "nguyen",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get detail product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/api/v1/products/1699603328354",
+              "host": ["{{host}}"],
+              "path": ["api", "v1", "products", "1699603328354"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"product 3\",\r\n    \"category\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}/api/v1/products/1699603328354",
+              "host": ["{{host}}"],
+              "path": ["api", "v1", "products", "1699603328354"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/api/v1/products",
+              "host": ["{{host}}"],
+              "path": ["api", "v1", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{host}}/api/v1/products/1699603328354",
+              "host": ["{{host}}"],
+              "path": ["api", "v1", "products", "1699603328354"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
