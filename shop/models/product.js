@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  uid: { type: String },
+  uid: { type: Number },
   name: {
     type: String,
     required: [true, "Please add name"],

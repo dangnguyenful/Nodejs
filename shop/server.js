@@ -4,6 +4,9 @@ const productRoutes = require("./routes/product");
 const logger = require("morgan");
 const colors = require("colors");
 const connectDB = require("./db/db");
+const errorHandler = require("./middleware/error");
+const ch = require("./middleware/createContextHook");
+const gh = require("./middleware/getContextHook");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -11,13 +14,16 @@ connectDB(process.env.MONGO_URI);
 
 const app = express();
 
+app.use(ch);
 app.use(express.json());
 
 if (process.env.NODE_ENV === "development") {
   app.use(logger("dev"));
 }
 
+app.use(gh);
 app.use("/api/v1/products", productRoutes);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

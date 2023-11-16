@@ -1,5 +1,7 @@
 const productModels = require("../models/product");
 const { deepClone } = require("../utils/common");
+const errorHandler = require("../middleware/error");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc Get all product
 // @route GET /api/v1/products
@@ -7,11 +9,7 @@ const { deepClone } = require("../utils/common");
 exports.getAllProducts = async (req, res, next) => {
   try {
     const docs = await productModels.find();
-    if (!docs) {
-      res.status(400).json({ success: false, error: "Empty !" });
-    } else {
-      res.status(200).json({ success: true, data: docs });
-    }
+    res.status(200).json({ success: true, data: docs });
   } catch (err) {
     res.status(400).json({ success: false, error: err });
   }
@@ -24,12 +22,16 @@ exports.getDetailProduct = async (req, res, next) => {
   try {
     const docs = await productModels.findOne({ uid: req.params.uid });
     if (!docs) {
-      res.status(400).json({ success: false, error: "Not found !" });
-    } else {
-      res.status(200).json({ success: true, data: docs });
+      return next(
+        new ErrorResponse(
+          `Product not found with id of ${req.params.uid}`,
+          404,
+        ),
+      );
     }
+    res.status(200).json({ success: true, data: docs });
   } catch (err) {
-    res.status(400).json({ success: false, error: err });
+    next(err);
   }
 };
 
@@ -40,15 +42,20 @@ exports.createProduct = async (req, res, next) => {
   try {
     const docs = await productModels.findOne({ name: req.body.name });
     if (!!docs) {
-      res.status(409).json({ success: false, message: "Duplicate name !" });
+      return next(
+        new ErrorResponse(
+          `Product with name ${req.body.name} is already exist !`,
+          409,
+        ),
+      );
     } else {
       const product = deepClone(req.body);
       product.uid = new Date().getTime();
-      productModels.create(product);
+      await productModels.create(product);
       res.status(200).json({ success: true, data: req.body });
     }
   } catch (err) {
-    res.status(400).json({ success: false, error: err });
+    next(err);
   }
 };
 
@@ -57,17 +64,21 @@ exports.createProduct = async (req, res, next) => {
 // @access Private
 exports.updateProduct = async (req, res, next) => {
   try {
-    const docs = await productModels.findOneAndUpdate(
-      { uid: req.params.uid },
-      req.body,
-      { new: true, runValidators: true },
-    );
+    const docs = await productModels.findOne({ uid: req.params.uid });
     if (!docs) {
-      res.status(400).json({ success: false, message: "Not found item !" });
+      return next(
+        new ErrorResponse(
+          `Product not found with id of ${req.params.uid}`,
+          404,
+        ),
+      );
+    } else {
+      await productModels.updateOne({ uid: req.params.uid }, req.body);
+      docsNew = await productModels.findOne({ uid: req.params.uid });
+      res.status(200).json({ success: true, data: docsNew });
     }
-    res.status(200).json({ success: true, data: docs });
   } catch (err) {
-    res.status(400).json({ success: false, error: err });
+    next(err);
   }
 };
 
@@ -76,12 +87,19 @@ exports.updateProduct = async (req, res, next) => {
 // @access Private
 exports.deleteProduct = async (req, res, next) => {
   try {
-    const docs = await productModels.findOneAndDelete({ uid: req.params.uid });
+    const docs = await productModels.findOne({ uid: req.params.uid });
     if (!docs) {
-      res.status(400).json({ success: false, message: "Not found item !" });
+      return next(
+        new ErrorResponse(
+          `Product not found with id of ${req.params.uid}`,
+          404,
+        ),
+      );
+    } else {
+      await productModels.deleteOne({ uid: req.params.uid });
+      res.status(200).json({ success: true });
     }
-    res.status(200).json({ success: true, message: "Success deleted !" });
   } catch (err) {
-    res.status(400).json({ success: false, error: err });
+    next(err);
   }
 };
